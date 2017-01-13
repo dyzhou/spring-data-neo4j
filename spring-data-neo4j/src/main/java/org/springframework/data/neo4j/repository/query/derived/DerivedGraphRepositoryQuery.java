@@ -18,11 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.cypher.Filters;
-import org.neo4j.ogm.cypher.function.DistanceComparison;
-import org.neo4j.ogm.cypher.function.DistanceFromPoint;
-import org.neo4j.ogm.cypher.function.FilterFunction;
 import org.neo4j.ogm.cypher.query.Pagination;
 import org.neo4j.ogm.cypher.query.SortOrder;
 import org.neo4j.ogm.session.Session;
@@ -30,9 +26,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
 import org.springframework.data.neo4j.repository.query.GraphQueryMethod;
 import org.springframework.data.repository.core.EntityMetadata;
 import org.springframework.data.repository.query.ParameterAccessor;
@@ -82,7 +75,6 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 			return new DeleteByQuery().execute(parameters);
 		}
 		return new FindByQuery().execute(parameters);
-
 	}
 
 	class CountByQuery implements RepositoryQuery {
@@ -94,7 +86,7 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 				Filters filters = resolveParams(parameters);
 				return session.count(info.getJavaType(), filters);
 			} else {
-		 		throw new RuntimeException("Long is required as the return type of a Count query");
+				throw new RuntimeException("Long is required as the return type of a Count query");
 			}
 		}
 
@@ -240,7 +232,6 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 	}
 
 
-
 	protected Object createPage(GraphQueryMethod graphQueryMethod, List resultList, Pageable pageable) {
 		if (pageable == null) {
 			return graphQueryMethod.isPageQuery() ? new PageImpl(resultList) : new SliceImpl(resultList);
@@ -328,5 +319,4 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 			return NO_PAGING_OR_SORTING;
 		}
 	}
-
 }

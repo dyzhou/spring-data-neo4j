@@ -34,10 +34,6 @@ public class PropertyComparisonBuilder extends CypherFilterBuilder {
 	@Override
 	public List<CypherFilter> build() {
 
-		if (part.getProperty().getSegment().contains("visited")) {
-			System.out.println("here");
-		}
-
 		List<CypherFilter> filters = new ArrayList<>();
 
 		CypherFilter filter = new CypherFilter();

@@ -244,8 +244,8 @@ public class Neo4jTemplateIT extends MultiDriverTestClass {
         saveUsers2();
 
 
-        Filter nameFilter = new Filter("name","Harmanpreet Singh");
-        Filter middleNameFilter = new Filter("middleName","A");
+        Filter nameFilter = new Filter("name",ComparisonOperator.EQUALS, "Harmanpreet Singh");
+        Filter middleNameFilter = new Filter("middleName",ComparisonOperator.EQUALS, "A");
         middleNameFilter.setBooleanOperator(BooleanOperator.AND);
         Filters filters = new Filters();
         filters.add(nameFilter, middleNameFilter);
@@ -279,8 +279,8 @@ public class Neo4jTemplateIT extends MultiDriverTestClass {
         saveUsers3();
 
 
-        Filter nameFilter = new Filter("name","Harmanpreet Singh");
-        Filter middleNameFilter = new Filter("middleName","A");
+        Filter nameFilter = new Filter("name",ComparisonOperator.EQUALS, "Harmanpreet Singh");
+        Filter middleNameFilter = new Filter("middleName",ComparisonOperator.EQUALS, "A");
         middleNameFilter.setBooleanOperator(BooleanOperator.AND);
         Filters filters = new Filters();
         filters.add(nameFilter, middleNameFilter);
@@ -456,13 +456,12 @@ public class Neo4jTemplateIT extends MultiDriverTestClass {
         this.template.save(new Cinema("Ritzy", 5000));
         this.template.save(new Cinema("Picturehouse", 7500));
 
-        Filter name = new Filter("name", "Ritzy");
+        Filter name = new Filter("name", ComparisonOperator.EQUALS, "Ritzy");
         Cinema loadedCinema = this.template.loadByProperties(Cinema.class, new Filters().add(name));
         assertNotNull("No cinema was loaded", loadedCinema);
         assertEquals("Ritzy", loadedCinema.getName());
 
-        Filter capacity = new Filter("capacity", 1000);
-        capacity.setComparisonOperator(ComparisonOperator.GREATER_THAN);
+        Filter capacity = new Filter("capacity", ComparisonOperator.GREATER_THAN, 1000);
         Collection<Cinema> loadedCinemas = this.template.loadAllByProperties(Cinema.class, new Filters().add(capacity));
         assertNotNull(loadedCinemas);
         assertEquals(2, loadedCinemas.size());

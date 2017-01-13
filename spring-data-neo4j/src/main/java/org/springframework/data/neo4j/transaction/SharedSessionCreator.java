@@ -23,13 +23,11 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.neo4j.ogm.session.Session;
 import org.neo4j.ogm.session.SessionFactory;
-import org.springframework.data.neo4j.annotation.Query;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.util.ClassUtils;
 
 /**
  * Delegate for creating a shareable Neo4j OGM {@link Session}
@@ -77,7 +75,7 @@ public class SharedSessionCreator {
 	 */
 	private static class SharedSessionInvocationHandler implements InvocationHandler {
 
-		private final Log logger = LogFactory.getLog(getClass());
+		private final Logger logger = LoggerFactory.getLogger(getClass());
 
 		private final SessionFactory targetFactory;
 		private final ClassLoader proxyClassLoader;

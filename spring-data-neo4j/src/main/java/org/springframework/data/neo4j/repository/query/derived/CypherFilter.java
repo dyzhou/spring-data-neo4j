@@ -106,11 +106,9 @@ public class CypherFilter {
 	public void setFunctionAdapter(FunctionAdapter functionAdapter) { this.functionAdapter = functionAdapter;	}
 
 	Filter toFilter() {
-		Filter filter = new Filter();
+		Filter filter = new Filter(propertyName, comparisonOperator, null);
 		filter.setPropertyPosition(propertyPosition);
-		filter.setPropertyName(propertyName);
 		filter.setOwnerEntityType(ownerEntityType);
-		filter.setComparisonOperator(comparisonOperator);
 		filter.setNegated(negated);
 		filter.setBooleanOperator(booleanOperator);
 		filter.setNestedPropertyType(nestedPropertyType);

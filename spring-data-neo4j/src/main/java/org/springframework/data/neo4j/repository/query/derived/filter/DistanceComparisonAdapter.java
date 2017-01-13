@@ -34,7 +34,6 @@ public class DistanceComparisonAdapter implements FunctionAdapter<DistanceFromPo
 	private DistanceComparison distanceComparison;
 
 	public DistanceComparisonAdapter(CypherFilter cypherFilter) {
-		this.distanceComparison = new DistanceComparison();
 		this.cypherFilter = cypherFilter;
 	}
 
@@ -88,6 +87,6 @@ public class DistanceComparisonAdapter implements FunctionAdapter<DistanceFromPo
 			meters = distance.getValue();
 		}
 
-		distanceComparison.setValue(new DistanceFromPoint(point.getX(), point.getY(), distance.getValue() * meters));
+		distanceComparison = new DistanceComparison(new DistanceFromPoint(point.getX(), point.getY(), distance.getValue() * meters));
 	}
 }

@@ -29,8 +29,8 @@
     </parent>
 
     <properties>
-        <neo4j.ogm.version>2.1.0</neo4j.ogm.version>
-        <ogm.properties>ogm-http.properties</ogm.properties>
+        <neo4j.ogm.version>2.1.1-SNAPSHOT</neo4j.ogm.version>
+        <ogm.properties>ogm-bolt.properties</ogm.properties>
     </properties>
 
 
@@ -58,6 +58,12 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -134,7 +140,7 @@
 
         <dependency>
             <groupId>org.neo4j</groupId>
-            <artifactId>neo4j-ogm-http-driver</artifactId>
+            <artifactId>neo4j-ogm-bolt-driver</artifactId>
             <version>${neo4j.ogm.version}</version>
         </dependency>
 
@@ -143,6 +149,12 @@
             <artifactId>neo4j-ogm-test</artifactId>
             <version>${neo4j.ogm.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.neo4j</groupId>
+                    <artifactId>neo4j-security-enterprise</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -182,4 +194,25 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>embedded</id>
+            <properties>
+                <ogm.properties>ogm-embedded.properties</ogm.properties>
+            </properties>
+        </profile>
+        <profile>
+            <id>http</id>
+            <properties>
+                <ogm.properties>ogm-http.properties</ogm.properties>
+            </properties>
+        </profile>
+        <profile>
+            <id>bolt</id>
+            <properties>
+                <ogm.properties>ogm-bolt.properties</ogm.properties>
+            </properties>
+        </profile>
+    </profiles>
 </project>

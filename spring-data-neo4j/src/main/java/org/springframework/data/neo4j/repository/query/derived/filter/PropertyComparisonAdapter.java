@@ -16,6 +16,7 @@ package org.springframework.data.neo4j.repository.query.derived.filter;
 import java.util.Map;
 
 import org.neo4j.ogm.cypher.CaseInsensitiveLikePropertyValueTransformer;
+import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.cypher.function.FilterFunction;
 import org.neo4j.ogm.cypher.function.PropertyComparison;
 import org.springframework.data.neo4j.repository.query.derived.CypherFilter;
@@ -33,19 +34,7 @@ public class PropertyComparisonAdapter implements FunctionAdapter<Object> {
 
 	public PropertyComparisonAdapter(CypherFilter cypherFilter) {
 		this.cypherFilter = cypherFilter;
-		this.propertyComparison = new PropertyComparison();
-	}
-
-	public PropertyComparisonAdapter() {
-		this(null);
-	}
-
-	public CypherFilter getCypherFilter() {
-		return cypherFilter;
-	}
-
-	public void setCypherFilter(CypherFilter cypherFilter) {
-		this.cypherFilter = cypherFilter;
+		this.propertyComparison = new PropertyComparison(null);
 	}
 
 	@Override
@@ -53,7 +42,6 @@ public class PropertyComparisonAdapter implements FunctionAdapter<Object> {
 		return null;
 	}
 
-	@Override
 	public FilterFunction<Object> filterFunction() {
 		return propertyComparison;
 	}
@@ -86,7 +74,9 @@ public class PropertyComparisonAdapter implements FunctionAdapter<Object> {
 			throw new IllegalStateException("Can't set value from args when cypherFilter is null.");
 		}
 		if (parameterCount() > 0) {
-			propertyComparison.setValue(params.get(cypherFilter.getPropertyPosition()));
+			Filter filter = propertyComparison.getFilter();
+			propertyComparison = new PropertyComparison(params.get(cypherFilter.getPropertyPosition()));
+			propertyComparison.setFilter(filter);
 		}
 	}
 }
