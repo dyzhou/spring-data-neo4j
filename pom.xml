@@ -27,7 +27,7 @@
         <project.type>multi</project.type>
         <dist.id>spring-data-neo4j</dist.id>
         <springdata.commons>2.0.0.DATACMNS-867-SNAPSHOT</springdata.commons>
-        <source.level>1.7</source.level>
+        <source.level>1.8</source.level>
         <commonslang.version>2.6</commonslang.version>
         <bundlor.enabled>false</bundlor.enabled>
     </properties>
