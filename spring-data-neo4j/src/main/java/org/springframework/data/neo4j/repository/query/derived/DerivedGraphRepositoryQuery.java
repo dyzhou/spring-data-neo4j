@@ -1,5 +1,5 @@
 /*
- * Copyright (c)  [2011-2016] "Pivotal Software, Inc." / "Neo Technology" / "Graph Aware Ltd."
+ * Copyright (c)  [2011-2017] "Pivotal Software, Inc." / "Neo Technology" / "Graph Aware Ltd."
  *
  * This product is licensed to you under the Apache License, Version 2.0 (the "License").
  * You may not use this product except in compliance with the License.
@@ -18,11 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.ogm.cypher.Filter;
 import org.neo4j.ogm.cypher.Filters;
-import org.neo4j.ogm.cypher.function.DistanceComparison;
-import org.neo4j.ogm.cypher.function.DistanceFromPoint;
-import org.neo4j.ogm.cypher.function.FilterFunction;
 import org.neo4j.ogm.cypher.query.Pagination;
 import org.neo4j.ogm.cypher.query.SortOrder;
 import org.neo4j.ogm.session.Session;
@@ -30,9 +26,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.geo.Distance;
-import org.springframework.data.geo.Metrics;
-import org.springframework.data.geo.Point;
 import org.springframework.data.neo4j.repository.query.GraphQueryMethod;
 import org.springframework.data.repository.core.EntityMetadata;
 import org.springframework.data.repository.query.ParameterAccessor;
@@ -48,6 +41,7 @@ import org.springframework.data.repository.query.parser.PartTree;
  * @author Luanne Misquitta
  * @author Jasper Blues
  * @author Vince Bickers
+ * @author Mark Paluch
  */
 public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 
@@ -245,7 +239,7 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 		if (pageable == null) {
 			return graphQueryMethod.isPageQuery() ? new PageImpl(resultList) : new SliceImpl(resultList);
 		}
-		int currentTotal = pageable.getOffset() + resultList.size() +
+		long currentTotal = pageable.getOffset() + resultList.size() +
 				(resultList.size() == pageable.getPageSize() ? pageable.getPageSize() : 0);
 
 		int resultWindowSize = Math.min(resultList.size(), pageable.getPageSize());
@@ -261,7 +255,6 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 
 		SortOrder sortOrder = new SortOrder();
 
-		if (sort != null) {
 			for (Sort.Order order : sort) {
 				if (order.isAscending()) {
 					sortOrder.add(order.getProperty());
@@ -269,21 +262,17 @@ public class DerivedGraphRepositoryQuery implements RepositoryQuery {
 					sortOrder.add(SortOrder.Direction.DESC, order.getProperty());
 				}
 			}
-		}
 		return sortOrder;
 	}
 
 	private PagingAndSorting configurePagingAndSorting(Pageable pageable, Sort sort) {
-		SortOrder sortOrder = null;
+		SortOrder sortOrder;
 		Pagination pagination = null;
 
-		if (pageable != null) {
+		if (pageable != Pageable.NONE) {
 			pagination = new Pagination(pageable.getPageNumber(), pageable.getPageSize());
-			if (pageable.getSort() != null) {
-				sortOrder = convert(pageable.getSort());
-			}
-		}
-		if (sort != null) {
+			sortOrder = convert(pageable.getSort());
+		} else {
 			sortOrder = convert(sort);
 		}
 

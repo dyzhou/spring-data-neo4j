@@ -1,5 +1,5 @@
 /*
- * Copyright (c)  [2011-2016] "Pivotal Software, Inc." / "Neo Technology" / "Graph Aware Ltd."
+ * Copyright (c)  [2011-2017] "Pivotal Software, Inc." / "Neo Technology" / "Graph Aware Ltd."
  *
  * This product is licensed to you under the Apache License, Version 2.0 (the "License").
  * You may not use this product except in compliance with the License.
@@ -14,6 +14,8 @@
 package org.springframework.data.neo4j.repository;
 
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +24,8 @@ import org.springframework.data.domain.Sort;
  * Neo4j OGM specific extension of {@link org.springframework.data.repository.Repository}.
  *
  * @author Vince Bickers
- * @author Mark ANgrish
+ * @author Mark Angrish
+ * @author Mark Paluch
  */
 public interface GraphRepository<T> extends Neo4jRepository<T, Long> {
 
@@ -30,7 +33,7 @@ public interface GraphRepository<T> extends Neo4jRepository<T, Long> {
 
 	<S extends T> Iterable<S> save(Iterable<S> entities, int depth);
 
-	T findOne(Long id, int depth);
+	Optional<T> findOne(Long id, int depth);
 
 	Iterable<T> findAll();
 

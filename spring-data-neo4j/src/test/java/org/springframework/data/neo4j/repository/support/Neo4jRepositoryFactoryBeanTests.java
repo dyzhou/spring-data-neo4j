@@ -1,5 +1,5 @@
 /*
- * Copyright (c)  [2011-2016] "Pivotal Software, Inc." / "Neo Technology" / "Graph Aware Ltd."
+ * Copyright (c)  [2011-2017] "Pivotal Software, Inc." / "Neo Technology" / "Graph Aware Ltd."
  *
  * This product is licensed to you under the Apache License, Version 2.0 (the "License").
  * You may not use this product except in compliance with the License.
@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.neo4j.ogm.MetaData;
 import org.neo4j.ogm.session.Session;
+
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
@@ -39,6 +41,7 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
 
 /**
  * @author Mark Angrish
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class Neo4jRepositoryFactoryBeanTests {
@@ -48,7 +51,7 @@ public class Neo4jRepositoryFactoryBeanTests {
 	@Mock
 	Session session;
 	@Mock
-	RepositoryFactorySupport factory;
+	MyRepositoryFactorySupport factory;
 	@Mock
 	ListableBeanFactory beanFactory;
 	@Mock
@@ -64,9 +67,9 @@ public class Neo4jRepositoryFactoryBeanTests {
 
 		Map<String, PersistenceExceptionTranslator> beans = new HashMap<>();
 		beans.put("foo", translator);
-		when(beanFactory.getBeansOfType(eq(PersistenceExceptionTranslator.class), anyBoolean(), anyBoolean())).thenReturn(
-				beans);
-		when(factory.getRepository(any(Class.class), any(Object.class))).thenReturn(repository);
+		when(beanFactory.getBeansOfType(eq(PersistenceExceptionTranslator.class), anyBoolean(), anyBoolean()))
+				.thenReturn(beans);
+		when(factory.getRepository(any(Class.class), any(Optional.class))).thenReturn(repository);
 
 		// Setup standard factory configuration
 		factoryBean = new DummyNeo4jRepositoryFactoryBean(SimpleSampleRepository.class);
@@ -103,8 +106,8 @@ public class Neo4jRepositoryFactoryBeanTests {
 		factoryBean = new DummyNeo4jRepositoryFactoryBean(null);
 	}
 
-	private class DummyNeo4jRepositoryFactoryBean<T extends Neo4jRepository<S, ID>, S, ID extends Serializable> extends
-			Neo4jRepositoryFactoryBean<T, S, ID> {
+	private class DummyNeo4jRepositoryFactoryBean<T extends Neo4jRepository<S, ID>, S, ID extends Serializable>
+			extends Neo4jRepositoryFactoryBean<T, S, ID> {
 
 		/**
 		 * @param repositoryInterface
@@ -134,5 +137,13 @@ public class Neo4jRepositoryFactoryBeanTests {
 	@SuppressWarnings("serial")
 	private static abstract class User implements Persistable<Long> {
 
+	}
+
+	private abstract class MyRepositoryFactorySupport extends RepositoryFactorySupport {
+
+		@Override
+		public <T> T getRepository(Class<T> repositoryInterface, Optional<Object> customImplementation) {
+			return super.getRepository(repositoryInterface, customImplementation);
+		}
 	}
 }

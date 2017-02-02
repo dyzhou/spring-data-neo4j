@@ -14,6 +14,7 @@
 package org.springframework.data.neo4j.repository;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,7 +35,7 @@ public interface Neo4jRepository<T, ID extends Serializable> extends PagingAndSo
 
 	<S extends T> Iterable<S> save(Iterable<S> entities, int depth);
 
-	T findOne(ID id, int depth);
+	Optional<T> findOne(ID id, int depth);
 
 	Iterable<T> findAll();
 
